@@ -1,8 +1,8 @@
 NAME      = RPN
 
-CC        = c++ 
+CXX        = c++ 
 
-FLAGS     = -std=c++98 -Wextra -Werror -Wall
+CXXFLAGS     = -std=c++98 -Wextra -Werror -Wall
 
 SRC_FILES = $(wildcard *.cpp)
 
@@ -10,12 +10,12 @@ OBJ_FILES = $(SRC_FILES:.cpp=.o)
 HEADER = $(wildcard *.hpp)
 
 %.o: %.cpp $(HEADER) Makefile
-		$(CC) $(FLAGS) -c $< -o $@
+		$(CXX) $(CXXFLAGS) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
-		$(CC) $(FLAGS) -o $(NAME) $^
+		$(CXX) $(CXXFLAGS) -o $(NAME) $^
 
 clean:
 	rm -rf $(OBJ_FILES)

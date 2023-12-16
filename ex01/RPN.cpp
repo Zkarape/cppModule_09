@@ -9,7 +9,7 @@ bool isOperator(const std::string &token)
     return token.size() == 1 && token.find_first_of("+-*/") != std::string::npos;
 }
 
-bool invokeOp(const std::string &token, double arg1, double arg2)
+double invokeOp(const std::string &token, double arg1, double arg2)
 {
     assert(token.size() == 1);
     switch (token[0])
@@ -67,6 +67,7 @@ double RPNalgo(const std::string &expression)
         else
         {
             stack.push(stringToDouble(token));
+            // stack.push(stod(token));
         }
     }
     return (stack.top());

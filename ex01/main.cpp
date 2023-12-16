@@ -6,6 +6,7 @@ int main(int ac, char **av)
 {
     try
     {
+        assert(ac != 2);
         if (RPNalgo(av[1]))
         {
             std::cerr << "The given string is wrong: e.i. it contains char that is not from \"\t */+-1234567890\"" << std::endl;
