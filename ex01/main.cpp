@@ -1,7 +1,6 @@
 #include "RPN.hpp"
 
 double RPNalgo(const std::string &expression);
-bool isValid(double d);
 
 int main(int ac, char **av)
 {

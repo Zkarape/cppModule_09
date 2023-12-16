@@ -10,9 +10,6 @@
 #include <string>
 #include <cfloat>
 
-double getNaN();
-
-#define NaN getNaN()
 
 
 
