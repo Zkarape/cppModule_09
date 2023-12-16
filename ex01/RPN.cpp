@@ -21,9 +21,9 @@ double invokeOp(const std::string &token, double arg1, double arg2)
     case '*':
         return arg1 * arg2;
     case '/':
-        return arg2 != 0 ? arg1 / arg2 : NaN;
+        return arg2 != 0 ? arg1 / arg2 : throw(std::logic_error("Divided by 0\n"));
     }
-    return NaN;
+    return 0;
 }
 
 double pop(std::stack<double>& stack) {
@@ -63,8 +63,6 @@ double RPNalgo(const std::string &expression)
             arg1 = pop(stack);
             arg2 = pop(stack);
             res = invokeOp(token, arg1, arg2);
-            if (!isValid(res))
-                return (res);
             stack.push(res);
         }
         else
