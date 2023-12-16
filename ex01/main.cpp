@@ -1,17 +1,20 @@
 #include "RPN.hpp"
 
 double RPNalgo(const std::string &expression);
+bool isValid(double d);
+
 
 int main(int ac, char **av)
 {
     try
     {
-        assert(ac != 2);
-        if (RPNalgo(av[1]))
-        {
-            std::cerr << "The given string is wrong: e.i. it contains char that is not from \"\t */+-1234567890\"" << std::endl;
-            return (0);
-        }
+        if (ac != 2)
+            throw std::runtime_error("Error: ac should be 2");
+        double res = RPNalgo(av[1]);
+        if (isValid(res))
+            std::cout << "Result is " << res << std::endl;
+        else
+            std::cerr << "Error in expression" << std::endl;
     }
     catch (const std::exception &e)
     {

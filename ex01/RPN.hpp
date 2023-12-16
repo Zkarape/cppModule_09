@@ -8,6 +8,12 @@
 #include <sstream> // std::istringstream
 #include <stack>
 #include <string>
+#include <cfloat>
+
+double getNaN();
+
+#define NaN getNaN()
+
 
 
 // class RPN

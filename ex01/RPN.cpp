@@ -1,8 +1,8 @@
 #include "RPN.hpp"
 
-// RPN::RPN() {}
-
-// RPN::~RPN() {}
+double getNaN() {
+    return std::numeric_limits<double>::quiet_NaN();
+}
 
 bool isOperator(const std::string &token)
 {
@@ -21,9 +21,9 @@ double invokeOp(const std::string &token, double arg1, double arg2)
     case '*':
         return arg1 * arg2;
     case '/':
-        return arg2 != 0 ? arg1 / arg2 : 0;
+        return arg2 != 0 ? arg1 / arg2 : NaN;
     }
-    return 0;
+    return NaN;
 }
 
 double pop(std::stack<double>& stack) {
@@ -33,6 +33,11 @@ double pop(std::stack<double>& stack) {
     double arg = stack.top();
     stack.pop();
     return arg;
+}
+
+bool isValid(double d)
+{
+    return !std::isnan(d);
 }
 
 double stringToDouble(const std::string& str) {
@@ -58,16 +63,14 @@ double RPNalgo(const std::string &expression)
             arg1 = pop(stack);
             arg2 = pop(stack);
             res = invokeOp(token, arg1, arg2);
-            if (!std::isnan(res))
-            {
+            if (!isValid(res))
                 return (res);
-            }
             stack.push(res);
         }
         else
         {
-            stack.push(stringToDouble(token));
-            // stack.push(stod(token));
+            stack.push(strtod(token.c_str(), NULL));
+            // stack.push(stringToDouble(token));
         }
     }
     return (stack.top());
