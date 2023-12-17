@@ -60,7 +60,7 @@ std::ostream&	operator<<(std::ostream& out, const for_date_check& instance);
 class BitcoinExchange
 {
 private:
-    std::map<for_date_check, double> _map;
+    std::map<std::string, double, std::greater<std::string> > _map;
     std::string _data;
     // char **_keys;
 public:

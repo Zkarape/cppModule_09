@@ -8,6 +8,7 @@ int main(int ac, char **av)
             throw(std::runtime_error("Invalid arguments"));
         BitcoinExchange instance(av[1]);
         instance.fillMap();
+        // TODO read input file
         instance.printMap();
     }
     catch(const std::exception& e)

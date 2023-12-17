@@ -37,11 +37,8 @@ bool is_only_digit(const std::string &str)
     return (true);
 }
 
-bool is_leap_year(int yearInt)
-{
-    if ((yearInt % 4 == 0 && yearInt % 100 != 0) || yearInt % 400 == 0)
-        return (1);
-    return (0);
+bool is_leap_year(int year) {
+    return (year % 400 == 0 ? true : year % 100 == 0 ? false : year % 4 == 0 ? true : false);
 }
 
 bool checkDay(const for_date_check &date)
@@ -54,7 +51,7 @@ bool checkDay(const for_date_check &date)
         return (0);
     if (monthInt == 2 && ((!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) && dayInt > 28) || (dayInt > 29)))
         return (0);
-    if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 30) || (monthInt % 2 && dayInt > 31)))
+    if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 31) || (monthInt % 2 && dayInt > 30)))
         return (0);
     return (1);
 }
@@ -65,7 +62,7 @@ bool BitcoinExchange::checkDate(const for_date_check &date)
         throw(std::runtime_error("Year is invalid"));
     if (date.month.size() != 2 || is_only_digit(date.month) == false || date.month > "12" || date.month < "01")
         throw(std::runtime_error("Month is invalid"));
-    if (date.day.size() != 2 || is_only_digit(date.day) == false || !checkDay(date))
+    if (date.day.size() != 2 || is_only_digit(date.day) == false || (!checkDay(date) && printf("checkDay\n")))
         throw(std::runtime_error("Day is invalid"));
     return (true);
 }
@@ -76,15 +73,15 @@ void aftergetline(std::stringstream &line, const std::string &err)
         throw(std::runtime_error(err));
 }
 
-std::pair<std::string, std::string> splitLine(std::stringstream &line, char c)
+std::pair<std::string, std::string> splitLine(std::string line, char c)
 {
     std::string key;
     std::string val;
-    std::getline(line, key, c);
-    // std::cout << "line = " << line.str() << std::endl;
-    aftergetline(line, "Getline failed on ','");
-    std::getline(line, val);
-    aftergetline(line, "Error on getline()");
+    std::stringstream streamLine(line);
+    std::getline(streamLine, key, c);
+    aftergetline(streamLine, "Getline failed on ','");
+    std::getline(streamLine, val);
+    aftergetline(streamLine, "Error on getline()");
     return (std::make_pair(key, val));
 }
 
@@ -115,7 +112,7 @@ void BitcoinExchange::fillMap()
         {
             try
             {
-                pair = splitLine(ss, ',');
+                pair = splitLine(to, ',');
                 std::stringstream ssdate(pair.first);
                 std::getline(ssdate, toDateStr, '-');
                 aftergetline(ssdate, "getline() failed on year");
@@ -124,14 +121,11 @@ void BitcoinExchange::fillMap()
                 aftergetline(ssdate, "getline() failed on month");
                 dateStruct.month = toDateStr;
                 std::getline(ssdate, toDateStr, '\0');
-                std::cout << "toDateStr = " <<toDateStr << std::endl;
                 aftergetline(ssdate, "getline() failed on day");
                 dateStruct.day = toDateStr;
                 checkDate(dateStruct);
                 value = checkVal(pair.second);
-                std::cout << "dateStruct = " << dateStruct << std::endl;
-                _map.insert(std::make_pair(dateStruct, value));
-                // std::cout << "_map.find(dateStruct)->first = " << _map.find(dateStruct)->first << std::endl;
+                _map.insert(std::make_pair(pair.first, value));
             }
             catch(const std::exception& e)
             {
@@ -142,7 +136,7 @@ void BitcoinExchange::fillMap()
 }
 
 void BitcoinExchange::printMap() const {
-    std::map<for_date_check, double>::const_iterator it = _map.begin();
+    std::map<std::string, double>::const_iterator it = _map.begin();
 
     while (it != _map.end()) {
         std::cout << it->first << " " << it->second << std::endl;
