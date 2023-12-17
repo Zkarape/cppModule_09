@@ -2,7 +2,10 @@
 
 bool isOperator(const std::string &token)
 {
-    return token.size() == 1 && token.find_first_of("+-*/") != std::string::npos;
+    bool res = token.find_first_of("+-*/") != std::string::npos;
+    if(token.size() != 1 || (std::isdigit(token[0]) == false && res == false))
+        throw(std::logic_error("Token size is invalid"));
+    return res;
 }
 
 double invokeOp(const std::string &token, double arg1, double arg2)
@@ -46,7 +49,6 @@ double RPNalgo(const std::string &expression)
     double arg1;
     double arg2;
     double res;
-    int k = 0;
 
     while (istr >> token)
     {
@@ -59,11 +61,11 @@ double RPNalgo(const std::string &expression)
         }
         else
         {
+        assert(token.size() == 1);
             stack.push(stringToDouble(token));
-            k++;
-            if (k > 2)
-                throw(std::logic_error("Wrong input provided with 3 items before operator"));
         }
     }
+    if (stack.size() != 1)
+        throw(std::logic_error("Stack is not empty"));
     return (stack.top());
 }
