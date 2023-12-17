@@ -5,12 +5,6 @@
 #include <cstdlib>
 #include <fstream>
 
-BitcoinExchange::BitcoinExchange()
-{
-}
-
-BitcoinExchange::~BitcoinExchange() {}
-
 void BitcoinExchange::openFile(const std::string &arg)
 {
     std::ifstream ifs(arg);
@@ -20,6 +14,13 @@ void BitcoinExchange::openFile(const std::string &arg)
         throw(std::runtime_error("Bad file input"));
     ifs >> _data;
 }
+
+BitcoinExchange::BitcoinExchange(const std::string &arg)
+{
+    openFile(arg);
+}
+
+BitcoinExchange::~BitcoinExchange() {}
 
 bool is_only_digit(const std::string &str)
 {
@@ -66,39 +67,63 @@ bool BitcoinExchange::checkDate(const for_date_check &date)
     return (true);
 }
 
+void aftergetline(std::stringstream &line, const std::string &err)
+{
+    if (line.good() == false)
+        throw(std::runtime_error(err));
+}
+
 std::pair<std::string, std::string> splitLine(std::stringstream &line, char c)
 {
     std::string key;
     std::string val;
     std::getline(line, key, c);
+    aftergetline(line, "Getline failed on ','");
     std::getline(line, val);
-    return(std::make_pair(key, val));
+    aftergetline(line, "Error on getline()");
+    return (std::make_pair(key, val));
 }
 
-bool BitcoinExchange::parseData()
+double BitcoinExchange::checkVal(const std::string &val)
+{
+    char *ptr;
+    double res;
+
+    res = strtod(val.c_str(), &ptr);
+    if (ptr != NULL)
+        throw(std::runtime_error("Value is wrong"));
+    return (res);
+}
+
+void BitcoinExchange::fillMap()
 {
     std::stringstream ss(_data);
+    std::stringstream ssdate;
     std::pair<std::string, std::string> pair;
     std::string to;
+    std::string toDateStr;
+    for_date_check dateStruct;
+    double value = 0;
 
     if (!_data.empty())
     {
         while (std::getline(ss, to, '\n'))
         {
             pair = splitLine(ss, ',');
+            std::stringstream ssdate(pair.first);
+            std::getline(ssdate, toDateStr, '-');
+            aftergetline(ssdate, "getline() failed on year");
+            dateStruct.year = toDateStr;
+            std::getline(ssdate, toDateStr, '-');
+            aftergetline(ssdate, "getline() failed on month");
+            dateStruct.month = toDateStr;
+            std::getline(ssdate, toDateStr);
+            aftergetline(ssdate, "getline() failed on day");
+            dateStruct.day = toDateStr;
+            checkDate(dateStruct);
+            value = checkVal(pair.second);
+            _map.insert(std::make_pair(dateStruct, value));
         }
     }
 }
 
-void BitcoinExchange::fillMap()
-{
-    double val;
-    std::string key;
-    // parseData(key, val);
-    // if (!splittedKey || !*splittedKey)
-    // return ;
-    for (int i = 0; i < 3; i++)
-    {
-        /* code */
-    }
-}
