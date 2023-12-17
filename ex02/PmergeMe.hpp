@@ -10,6 +10,5 @@
 #include <string>
 #include <cfloat>
 
-double RPNalgo(const std::string &expression);
 
 #endif

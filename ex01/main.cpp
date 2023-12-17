@@ -1,7 +1,5 @@
 #include "RPN.hpp"
 
-double RPNalgo(const std::string &expression);
-
 int main(int ac, char **av)
 {
     try
