@@ -9,15 +9,18 @@ void BitcoinExchange::openFile(const std::string &arg)
 {
     std::ifstream ifs(arg);
     if (ifs.is_open())
+    {
+        std::getline(ifs, _data, '\0');
         ifs.close();
+    }
     else
         throw(std::runtime_error("Bad file input"));
-    ifs >> _data;
 }
 
 BitcoinExchange::BitcoinExchange(const std::string &arg)
 {
-    openFile(arg);
+    (void)arg;
+    openFile("data.csv");
 }
 
 BitcoinExchange::~BitcoinExchange() {}
@@ -58,18 +61,18 @@ bool checkDay(const for_date_check &date)
 
 bool BitcoinExchange::checkDate(const for_date_check &date)
 {
-    if (date.year.size() != 4 || is_only_digit(date.year))
+    if (date.year.size() != 4 || is_only_digit(date.year) == false)
         throw(std::runtime_error("Year is invalid"));
-    if (date.month.size() != 2 || is_only_digit(date.month) || date.month > "12" || date.month < "01")
+    if (date.month.size() != 2 || is_only_digit(date.month) == false || date.month > "12" || date.month < "01")
         throw(std::runtime_error("Month is invalid"));
-    if (date.day.size() != 2 || is_only_digit(date.day) || !checkDay(date))
+    if (date.day.size() != 2 || is_only_digit(date.day) == false || !checkDay(date))
         throw(std::runtime_error("Day is invalid"));
     return (true);
 }
 
 void aftergetline(std::stringstream &line, const std::string &err)
 {
-    if (line.good() == false)
+    if (line.fail() == true)
         throw(std::runtime_error(err));
 }
 
@@ -78,6 +81,7 @@ std::pair<std::string, std::string> splitLine(std::stringstream &line, char c)
     std::string key;
     std::string val;
     std::getline(line, key, c);
+    // std::cout << "line = " << line.str() << std::endl;
     aftergetline(line, "Getline failed on ','");
     std::getline(line, val);
     aftergetline(line, "Error on getline()");
@@ -90,7 +94,7 @@ double BitcoinExchange::checkVal(const std::string &val)
     double res;
 
     res = strtod(val.c_str(), &ptr);
-    if (ptr != NULL)
+    if (*ptr != '\0')
         throw(std::runtime_error("Value is wrong"));
     return (res);
 }
@@ -109,21 +113,52 @@ void BitcoinExchange::fillMap()
     {
         while (std::getline(ss, to, '\n'))
         {
-            pair = splitLine(ss, ',');
-            std::stringstream ssdate(pair.first);
-            std::getline(ssdate, toDateStr, '-');
-            aftergetline(ssdate, "getline() failed on year");
-            dateStruct.year = toDateStr;
-            std::getline(ssdate, toDateStr, '-');
-            aftergetline(ssdate, "getline() failed on month");
-            dateStruct.month = toDateStr;
-            std::getline(ssdate, toDateStr);
-            aftergetline(ssdate, "getline() failed on day");
-            dateStruct.day = toDateStr;
-            checkDate(dateStruct);
-            value = checkVal(pair.second);
-            _map.insert(std::make_pair(dateStruct, value));
+            try
+            {
+                pair = splitLine(ss, ',');
+                std::stringstream ssdate(pair.first);
+                std::getline(ssdate, toDateStr, '-');
+                aftergetline(ssdate, "getline() failed on year");
+                dateStruct.year = toDateStr;
+                std::getline(ssdate, toDateStr, '-');
+                aftergetline(ssdate, "getline() failed on month");
+                dateStruct.month = toDateStr;
+                std::getline(ssdate, toDateStr, '\0');
+                std::cout << "toDateStr = " <<toDateStr << std::endl;
+                aftergetline(ssdate, "getline() failed on day");
+                dateStruct.day = toDateStr;
+                checkDate(dateStruct);
+                value = checkVal(pair.second);
+                std::cout << "dateStruct = " << dateStruct << std::endl;
+                _map.insert(std::make_pair(dateStruct, value));
+                // std::cout << "_map.find(dateStruct)->first = " << _map.find(dateStruct)->first << std::endl;
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
         }
     }
 }
 
+void BitcoinExchange::printMap() const {
+    std::map<for_date_check, double>::const_iterator it = _map.begin();
+
+    while (it != _map.end()) {
+        std::cout << it->first << " " << it->second << std::endl;
+        ++it;
+    }
+    std::cout << _map.size() << std::endl;
+};
+
+void BitcoinExchange::giveOutput()
+{
+
+}
+
+
+std::ostream&	operator<<(std::ostream& out, const for_date_check& instance)
+{
+	out << instance.year << "-" << instance.month << "-" << instance.day;
+	return (out);
+}

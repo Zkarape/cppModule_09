@@ -7,6 +7,8 @@ int main(int ac, char **av)
         if (ac != 2 || !av[1])
             throw(std::runtime_error("Invalid arguments"));
         BitcoinExchange instance(av[1]);
+        instance.fillMap();
+        instance.printMap();
     }
     catch(const std::exception& e)
     {
