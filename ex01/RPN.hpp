@@ -1,5 +1,5 @@
-#ifndef BE_HPP
-# define BE_HPP
+#ifndef BE_HAPPY
+# define BE_HAPPY
 
 #include <cassert>
 #include <cmath> // std::isnan

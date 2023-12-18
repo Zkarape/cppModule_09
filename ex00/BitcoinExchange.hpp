@@ -21,58 +21,47 @@ struct for_date_check
     //             if (obj1.year == obj2.year && obj1.month == obj2.month && obj1.day < obj2.day)
     //                 return (1);
     //             return 0;
-    //             // return (obj1.year < obj2.year || obj1.month < obj2.month || obj1.day < obj2.day);
     //         }
     // };
 
-
-    bool operator==(const for_date_check &obj) const {
+    bool operator==(const for_date_check &obj) const
+    {
         return (year == obj.year && month == obj.month && day == obj.day);
     }
 
-    bool operator<(const for_date_check &obj) const {
-        if (year < obj.year)
-            return (1);
-        if (year == obj.year)
-        {
-            if (month < obj.month)
-                return true;
-            if (month == obj.month)
-            {
-                if (day < obj.day)
-                    return true;
-            }
-        }
-        return 0;
-    }
-
-    for_date_check& operator=(const for_date_check &obj) {
+    for_date_check &operator=(const for_date_check &obj)
+    {
         year = obj.year;
         month = obj.month;
         day = obj.day;
         return (*this);
     }
-    
 };
-
-std::ostream&	operator<<(std::ostream& out, const for_date_check& instance);
 
 class BitcoinExchange
 {
 private:
-    std::map<std::string, double, std::greater<std::string> > _map;
+    std::map<std::string, double> _map;
     std::string _data;
-    // char **_keys;
+    std::string _argData;
+
 public:
     BitcoinExchange();
-    BitcoinExchange(const std::string &arg);
+    BitcoinExchange(const std::string &);
     bool checkDate(const for_date_check &_struct);
     double checkVal(const std::string &val);
-    ~BitcoinExchange();
+    double exchange(const std::string &date, float amount) const;
+    void openFirstCSV();
     void openFile(const std::string &arg);
     void fillMap();
+    void inputParse();
     void giveOutput();
     void printMap() const;
+    double findInMap(const std::string &) const;
+    ~BitcoinExchange();
 };
+
+void openFirstCSV();
+std::ostream &operator<<(std::ostream &out, const for_date_check &instance);
 
 #endif
