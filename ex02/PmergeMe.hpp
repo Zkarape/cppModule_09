@@ -1,14 +1,22 @@
-#ifndef BE_HPP
-# define BE_HPP
+#ifndef BE_HAPPY
+# define BE_HAPPY
 
 #include <cassert>
-#include <cmath> // std::isnan
+#include <cmath>
 #include <iostream>
 #include <limits>
-#include <sstream> // std::istringstream
+#include <sstream>
 #include <stack>
 #include <string>
 #include <cfloat>
 
+class PmergeMe
+{
+private:
+    /* data */
+public:
+    PmergeMe(/* args */);
+    ~PmergeMe();
+};
 
 #endif
