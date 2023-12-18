@@ -94,7 +94,6 @@ bool checkDay(const for_date_check &date)
     return (1);
 }
 
-
 bool BitcoinExchange::checkDate(const for_date_check &date)
 {
     int k = 1;
@@ -153,6 +152,10 @@ void BitcoinExchange::fillMap()
     for_date_check dateStruct;
     double value = 0;
 
+    std::getline(ss, to, '\n');
+    pair = splitLine(to, ',');
+    if (pair.first != "date " || pair.second != " exchange_rate")
+        throw(std::logic_error("data.csv file is not valid"));
     if (!_data.empty())
     {
         while (std::getline(ss, to, '\n'))
@@ -160,8 +163,6 @@ void BitcoinExchange::fillMap()
             try
             {
                 pair = splitLine(to, ',');
-                if (pair.first == "date" && pair.second == "exchange_rate")
-                    continue;
                 std::stringstream ssdate(pair.first);
                 std::getline(ssdate, datestr, '-');
                 aftergetline(ssdate, "getline() failed on year");
@@ -222,13 +223,16 @@ double BitcoinExchange::exchange(const std::string &date, float amount) const
 void BitcoinExchange::inputParse()
 {
     std::stringstream ss(_argData);
-    // std::cout << "_argData == " << _argData << std::endl;
     std::stringstream ssdate;
     std::pair<std::string, std::string> pair;
     std::string to;
     for_date_check dateStruct;
     double value = 0;
 
+    std::getline(ss, to, '\n');
+    pair = splitLine(to, '|');
+    if (pair.first != "date " || pair.second != " value")
+        throw(std::logic_error("Input file is not valid"));
     if (!_data.empty())
     {
         while (std::getline(ss, to, '\n'))
@@ -236,8 +240,6 @@ void BitcoinExchange::inputParse()
             try
             {
                 pair = splitLine(to, '|');
-                if (pair.first == "date " || pair.second == " value")
-                    continue;
                 std::stringstream ssdate(pair.first);
                 std::getline(ssdate, to, '-');
                 aftergetlinenoexcept(ssdate, "getline() failed on year");

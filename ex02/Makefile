@@ -2,7 +2,7 @@ NAME      = PmergeMe
 
 CXX        = c++ 
 
-CXXFLAGS     = -std=c++98 -Wextra -Werror -Wall
+CXXFLAGS     = -std=c++98 -Wextra -Werror -Wall -g -ggdb3
 
 SRC_FILES = $(wildcard *.cpp)
 
