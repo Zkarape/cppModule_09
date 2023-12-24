@@ -2,6 +2,7 @@
 #define BE_HAPPY
 
 #include <cassert>
+#include <algorithm>
 #include <cmath>
 #include <vector>
 #include <iostream>
@@ -32,7 +33,7 @@ public:
     void fillDeque(int m);
     void printVector();
     void printDeque();
-    void merge_vec_sort();
+    void merge_vec_sort(std::vector<int> &);
     void merge_deque_sort();
     void sortVector();
     void sortDeque();

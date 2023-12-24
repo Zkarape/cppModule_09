@@ -19,7 +19,7 @@ void PmergeMe::sortVector()
 	double start, end;
 	gettimeofday(&now, NULL);
 	start = gettime(now);
-	merge_vec_sort();
+	merge_vec_sort(_vec);
 	end = gettime(now);
 	std::cout << "Time taken by std::vector: " << std::fixed << end - start << " ms\n\n";
 	std::cout << "std::vector after sorting: ";

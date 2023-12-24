@@ -20,7 +20,7 @@ int PmergeMe::strtoint(char *str)
 {
     char *ptr;
     long number = strtol(str, &ptr, 10);
-    if (*ptr != '\0' || number > INT_MAX || number < INT_MIN)
+    if (*ptr != '\0' || number > std::numeric_limits<int>::max() || number < std::numeric_limits<int>::min())
         throw(std::logic_error("Error: string is invalid or out of range"));
     return (number);
 }
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
         PmergeMe merge;
         merge.argv_check_cont_fill(argv);
         merge.sortVector();
-        merge.sortDeque();
+        // merge.sortDeque();
     }
     catch (const std::exception &e)
     {
