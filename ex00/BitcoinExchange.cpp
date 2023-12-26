@@ -83,10 +83,13 @@ bool checkDay(const for_date_check &date)
     char *ptr;
 
     int dayInt = strtol(date.day.c_str(), NULL, 10);
+    if (dayInt <= 0)
+        return (0);
+    // std::cout << dayInt << "\n";
     int monthInt = strtol(date.month.c_str(), &ptr, 10);
     if (monthInt <= 7 && ((monthInt % 2 == 0 && dayInt > 30) || (monthInt % 2 && dayInt > 31)))
         return (0);
-    if (monthInt == 2 &&  (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) &&  dayInt > 28) /* || (dayInt > 29)) */)
+    if (monthInt == 2 &&  (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) &&  dayInt > 28))
         return (0);
     if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 31) || (monthInt % 2 && dayInt > 30)))
         return (0);
@@ -113,7 +116,7 @@ bool BitcoinExchange::checkDate(for_date_check &date)
         k = 0;
     if (date.month.size() != 2 || is_only_digit(date.month) == false || date.month > "12" || date.month < "01")
         k = 0;
-    if ((date.day.size() != 2 || is_only_digit(date.day) == false || !checkDay(date)) && date.day[2] != ' ')
+    if (date.day.size() != 2 || is_only_digit(date.day) == false || !checkDay(date))
         k = 0;
     return (k);
 }
@@ -275,15 +278,17 @@ void BitcoinExchange::inputParse()
                 pair = splitLine(to, '|');
                 std::stringstream ssdate(pair.first);
                 std::getline(ssdate, to, '-');
-                aftergetlinenoexcept(ssdate, "getline() failed on year");
                 dateStruct.year = to;
                 std::getline(ssdate, to, '-');
-                aftergetlinenoexcept(ssdate, "getline() failed month");
                 dateStruct.month = to;
                 std::getline(ssdate, to, '\0');
-                aftergetlinenoexcept(ssdate, "getline() failed on day");
                 dateStruct.day = to;
-                if (pair.first.empty() || pair.second.empty() || !checkDate(dateStruct) || !checkDay(dateStruct))
+                if (pair.second.empty())
+                {
+                    std::string s = "Error: bad input => " + pair.first;
+                    throw(std::runtime_error(s.c_str()));
+                }
+                if (pair.second.empty() || !checkDate(dateStruct) || !checkDay(dateStruct))
                 {
                     throw(std::runtime_error("Error: bad input"));
                 }

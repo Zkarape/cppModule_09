@@ -32,7 +32,7 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 		++power;
 		n = pow(2, power) - n;
 
-		for (rangeStart = rangeEnd + n - 1; rangeStart >= rangeEnd; rangeStart--)
+		for (rangeStart = rangeEnd + n - 1; rangeStart >= rangeEn; rangeStart--)
 		{
 			if (rangeStart >= 0 && rangeStart < smSize)
 			{
@@ -47,6 +47,7 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 			}
 			else
 			{
+				std::cout << "rangeStart == " << rangeStart << "smSize == " << smSize << std::endl;
 				std::cerr << "Error: Invalid rangeStart in PmergeMe::insert." << std::endl;
 			}
 		}
