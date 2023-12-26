@@ -56,7 +56,7 @@ void PmergeMe::merge_deq_sort(std::deque<int> &deq)
 	if (size == 2 || size == 3)
 	{
 		insertion_deque(deq);
-		return;
+		return ;
 	}
 	while (i + 1 < size)
 	{
