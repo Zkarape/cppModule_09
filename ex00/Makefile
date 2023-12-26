@@ -2,7 +2,7 @@ NAME      = btc
 
 CC        = c++ 
 
-FLAGS     = -Wextra -Werror -Wall -g3 -ggdb3 -std=c++98
+FLAGS     = -Wextra -Werror -Wall -g3 -ggdb3 -std=c++98 -pedantic
 
 SRC_FILES = $(wildcard *.cpp)
 

@@ -6,6 +6,19 @@
 #include <fstream>
 #include <dirent.h>
 
+bool for_date_check::operator==(const for_date_check &obj) const
+{
+    return (year == obj.year && month == obj.month && day == obj.day);
+}
+
+for_date_check &for_date_check::operator=(const for_date_check &obj)
+{
+    year = obj.year;
+    month = obj.month;
+    day = obj.day;
+    return (*this);
+}
+
 void BitcoinExchange::openFile(const std::string &arg)
 {
     std::ifstream ifs(arg.c_str());
@@ -89,14 +102,14 @@ bool checkDay(const for_date_check &date)
     int monthInt = strtol(date.month.c_str(), &ptr, 10);
     if (monthInt <= 7 && ((monthInt % 2 == 0 && dayInt > 30) || (monthInt % 2 && dayInt > 31)))
         return (0);
-    if (monthInt == 2 &&  (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) &&  dayInt > 28))
+    if (monthInt == 2 && (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) && dayInt > 28))
         return (0);
     if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 31) || (monthInt % 2 && dayInt > 30)))
         return (0);
     return (1);
 }
 
-inline std::string &strTrim(std::string &str) 
+inline std::string &strTrim(std::string &str)
 {
     str.erase(0, str.find_first_not_of(" "));
     int pos = str.find_last_not_of(" ") + 1;
@@ -149,12 +162,8 @@ std::pair<std::string, std::string> splitLine(std::string &line, char c)
 
     aftergetline(streamLine, "getline() failed on ','");
     std::getline(streamLine, val);
-    // aftergetline(streamLine, "Error on getline()"); // զուտ քաղաքակիրթ աշխարհի համար ։D
-    // aftergetlinenoexcept(streamLine, key);
-    // if (aftergetlinenoexcept(streamLine, key))
     return (std::make_pair(key, val));
 }
-
 
 double BitcoinExchange::checkVal(std::string &val)
 {
@@ -226,7 +235,7 @@ void BitcoinExchange::printMap() const
         ++it;
     }
     std::cout << _map.size() << std::endl;
-};
+}
 
 double BitcoinExchange::exchange(const std::string &date, float amount) const
 {
@@ -246,13 +255,12 @@ double BitcoinExchange::exchange(const std::string &date, float amount) const
     }
     --pair.first;
     return (pair.first->second * amount);
-};
+}
 
-
-bool func(std::string& key, std::string& value)
+bool func(std::string &key, std::string &value)
 {
-    if (key == "0" && value =="0")
-        return(0);
+    if (key == "0" && value == "0")
+        return (0);
     return (1);
 }
 

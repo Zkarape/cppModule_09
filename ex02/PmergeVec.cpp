@@ -27,6 +27,11 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 	int rangeEnd = 0;
 	int indexFoundByBinary = 0;
 
+	if (smSize == _vec.size() / 2)
+	{
+		largers.insert(largers.begin(), smallers[0]);
+		return ;
+	}
 	while (i < smSize)
 	{
 		++power;
@@ -54,11 +59,8 @@ void PmergeMe::merge_vec_sort(std::vector<int> &vec)
 	std::vector<int> largers;
 	std::vector<int> smallers;
 
-	if (size == 2 || size == 3)
-	{
-		insertion_vector(vec);
+	if (size == 0 || size == 1)
 		return;
-	}
 	while (i + 1 < size)
 	{
 		if (vec[i] > vec[i + 1])

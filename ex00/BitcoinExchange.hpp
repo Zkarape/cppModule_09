@@ -1,5 +1,5 @@
 #ifndef BE_HPP
-#define BE_HPP
+# define BE_HPP
 
 #include <iostream>
 #include <map>
@@ -9,33 +9,8 @@ struct for_date_check
     std::string year;
     std::string month;
     std::string day;
-
-    // class compare
-    // {
-    //     public:
-    //         bool operator()(const for_date_check &obj1, const for_date_check &obj2) const {
-    //             if (obj1.year < obj2.year)
-    //                 return (1);
-    //             if (obj1.year == obj2.year && obj1.month < obj2.month)
-    //                 return (1);
-    //             if (obj1.year == obj2.year && obj1.month == obj2.month && obj1.day < obj2.day)
-    //                 return (1);
-    //             return 0;
-    //         }
-    // };
-
-    bool operator==(const for_date_check &obj) const
-    {
-        return (year == obj.year && month == obj.month && day == obj.day);
-    }
-
-    for_date_check &operator=(const for_date_check &obj)
-    {
-        year = obj.year;
-        month = obj.month;
-        day = obj.day;
-        return (*this);
-    }
+    bool operator==(const for_date_check &obj) const;
+    for_date_check &operator=(const for_date_check &obj);
 };
 
 class BitcoinExchange
