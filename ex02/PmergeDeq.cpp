@@ -54,38 +54,38 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 	}
 }
 
-void PmergeMe::merge_vec_sort(std::deque<int> &vec)
+void PmergeMe::merge_deq_sort(std::deque<int> &deq)
 {
 	int i = 0;
 	int j = 0;
-	int size = vec.size();
+	int size = deq.size();
 	std::deque<int> largers;
 	std::deque<int> smallers;
 
 	if (size == 2 || size == 3)
 	{
-		insertion_deque(vec);
+		insertion_deque(deq);
 		return;
 	}
 	while (i + 1 < size)
 	{
-		if (vec[i] > vec[i + 1])
+		if (deq[i] > deq[i + 1])
 		{
-			largers.push_back(vec[i]);
-			smallers.push_back(vec[i + 1]);
+			largers.push_back(deq[i]);
+			smallers.push_back(deq[i + 1]);
 		}
 		else
 		{
-			largers.push_back(vec[i + 1]);
-			smallers.push_back(vec[i]);
+			largers.push_back(deq[i + 1]);
+			smallers.push_back(deq[i]);
 		}
 		i += 2;
 	}
 	if (i < size)
 	{
-		largers.push_back(vec[i]);
+		largers.push_back(deq[i]);
 	}
-	merge_vec_sort(largers);
+	merge_deq_sort(largers);
 	insert(largers, smallers);
-	vec = largers;
+	deq = largers;
 }

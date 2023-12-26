@@ -1,5 +1,17 @@
 #include "BitcoinExchange.hpp"
 
+
+//1.piti spacenery karda u ancni 
+//2.data.csv-n chi kardum 
+
+//3.2011-05-00 | 2 chpiti ashxati
+//4.2011-05-a1 | 2 chpiti ashxati
+
+
+
+
+
+
 int main(int ac, char **av)
 {
     try

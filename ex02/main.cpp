@@ -23,7 +23,6 @@ int PmergeMe::strtoint(char *str)
     long number = strtol(str, &ptr, 10);
     if (*ptr != '\0' || number > std::numeric_limits<int>::max() || number < std::numeric_limits<int>::min())
     {
-        // std::cout << "number == " << *ptr << std::endl;
         throw(std::logic_error("Error: string is invalid or out of range"));
     }
     return (number);
@@ -41,8 +40,7 @@ void PmergeMe::argv_check_cont_fill(char **argv)
         try
         {
             _vec.push_back(strtoint(argv[i]));
-            // fillVector(strtoint(argv[i]));
-            // fillDeque(strtoint(argv[i]));
+            _deq.push_back(strtoint(argv[i]));
         }
         catch (std::exception &obj)
         {
@@ -54,8 +52,11 @@ void PmergeMe::argv_check_cont_fill(char **argv)
 
 int main(int argc, char **argv)
 {
-    // if (argc < 2)
-    //     return (0);
+    if (argc < 3)
+    {
+        std::cerr << "Give more arguments" << std::endl;
+        return (0);
+    }
     try
     {
         PmergeMe merge;
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
         std::cout << "Before: ";
         merge.printVector();
         merge.sortVector();
-        // merge.sortDeque();
+        merge.sortDeque();
     }
     catch (const std::exception &e)
     {

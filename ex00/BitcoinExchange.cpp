@@ -45,7 +45,6 @@ void BitcoinExchange::openFirstCSV()
                 else
                 {
                     std::ifstream ifs(filename.c_str());
-                    std::cout << "File " << filename << " opened successfully." << std::endl;
                     std::getline(ifs, _data, '\0');
                     ifs.close();
                     break;
@@ -83,22 +82,34 @@ bool checkDay(const for_date_check &date)
 {
     char *ptr;
 
-    int dayInt = strtol(date.day.c_str(), &ptr, 10);
+    int dayInt = strtol(date.day.c_str(), NULL, 10);
     int monthInt = strtol(date.month.c_str(), &ptr, 10);
     if (monthInt <= 7 && ((monthInt % 2 == 0 && dayInt > 30) || (monthInt % 2 && dayInt > 31)))
         return (0);
-    if (monthInt == 2 && ((!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) && dayInt > 28) || (dayInt > 29)))
+    if (monthInt == 2 &&  (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) &&  dayInt > 28) /* || (dayInt > 29)) */)
         return (0);
     if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 31) || (monthInt % 2 && dayInt > 30)))
         return (0);
     return (1);
 }
 
-bool BitcoinExchange::checkDate(const for_date_check &date)
+inline std::string &strTrim(std::string &str) 
+{
+    str.erase(0, str.find_first_not_of(" "));
+    int pos = str.find_last_not_of(" ") + 1;
+    str.erase(pos, str.size() - pos);
+    return (str);
+}
+
+bool BitcoinExchange::checkDate(for_date_check &date)
 {
     int k = 1;
 
-    if (date.year.size() != 4 || is_only_digit(date.year) == false)
+    strTrim(date.year);
+    strTrim(date.month);
+    strTrim(date.day);
+
+    if (date.year.size() != 4 || is_only_digit(date.year) == false || strtol(date.year.c_str(), NULL, 10) < 2009)
         k = 0;
     if (date.month.size() != 2 || is_only_digit(date.month) == false || date.month > "12" || date.month < "01")
         k = 0;
@@ -110,13 +121,20 @@ bool BitcoinExchange::checkDate(const for_date_check &date)
 void aftergetline(std::stringstream &line, const std::string &err)
 {
     if (line.fail() == true)
+    {
         throw(std::runtime_error(err));
+    }
 }
 
-void aftergetlinenoexcept(std::stringstream &line, const std::string &date)
+int aftergetlinenoexcept(std::stringstream &line, const std::string &date)
 {
+    int flag = 1;
     if (line.fail() == true)
+    {
         std::cout << "Error: bad input => " << date << std::endl;
+        flag = 0;
+    }
+    return (flag);
 }
 
 std::pair<std::string, std::string> splitLine(std::string &line, char c)
@@ -125,20 +143,27 @@ std::pair<std::string, std::string> splitLine(std::string &line, char c)
     std::string val;
     std::stringstream streamLine(line);
     std::getline(streamLine, key, c);
+
     aftergetline(streamLine, "getline() failed on ','");
     std::getline(streamLine, val);
-    aftergetline(streamLine, "Error on getline()");
+    // aftergetline(streamLine, "Error on getline()"); // զուտ քաղաքակիրթ աշխարհի համար ։D
+    // aftergetlinenoexcept(streamLine, key);
+    // if (aftergetlinenoexcept(streamLine, key))
     return (std::make_pair(key, val));
 }
 
-double BitcoinExchange::checkVal(const std::string &val)
+
+double BitcoinExchange::checkVal(std::string &val)
 {
     char *ptr;
     double res;
 
-    res = strtod(val.c_str(), &ptr);
+    // res = strtod(val.c_str(), &ptr);
+    res = strtod(strTrim(val).c_str(), &ptr);
     if (*ptr != '\0')
+    {
         throw(std::runtime_error("Value is wrong"));
+    }
     return (res);
 }
 
@@ -154,7 +179,7 @@ void BitcoinExchange::fillMap()
 
     std::getline(ss, to, '\n');
     pair = splitLine(to, ',');
-    if (pair.first != "date " || pair.second != " exchange_rate")
+    if (pair.first != "date" || pair.second != "exchange_rate")
         throw(std::logic_error("data.csv file is not valid"));
     if (!_data.empty())
     {
@@ -220,6 +245,14 @@ double BitcoinExchange::exchange(const std::string &date, float amount) const
     return (pair.first->second * amount);
 };
 
+
+bool func(std::string& key, std::string& value)
+{
+    if (key == "0" && value =="0")
+        return(0);
+    return (1);
+}
+
 void BitcoinExchange::inputParse()
 {
     std::stringstream ss(_argData);
@@ -250,8 +283,10 @@ void BitcoinExchange::inputParse()
                 std::getline(ssdate, to, '\0');
                 aftergetlinenoexcept(ssdate, "getline() failed on day");
                 dateStruct.day = to;
-                if (pair.first.empty() || pair.second.empty() || !checkDate(dateStruct))
-                    std::cerr << "Error: bad input => " << pair.first << std::endl;
+                if (pair.first.empty() || pair.second.empty() || !checkDate(dateStruct) || !checkDay(dateStruct))
+                {
+                    throw(std::runtime_error("Error: bad input"));
+                }
                 value = checkVal(pair.second);
                 if (value < 0)
                     std::cerr << "Error: not a positive number." << std::endl;

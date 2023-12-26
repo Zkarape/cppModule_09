@@ -40,25 +40,25 @@ struct for_date_check
 
 class BitcoinExchange
 {
-private:
-    std::map<std::string, double> _map;
-    std::string _data;
-    std::string _argData;
+    private:
+        std::map<std::string, double> _map;
+        std::string _data;
+        std::string _argData;
 
-public:
-    BitcoinExchange();
-    BitcoinExchange(const std::string &);
-    bool checkDate(const for_date_check &_struct);
-    double checkVal(const std::string &val);
-    double exchange(const std::string &date, float amount) const;
-    void openFirstCSV();
-    void openFile(const std::string &arg);
-    void fillMap();
-    void inputParse();
-    void giveOutput();
-    void printMap() const;
-    double findInMap(const std::string &) const;
-    ~BitcoinExchange();
+    public:
+        BitcoinExchange();
+        BitcoinExchange(const std::string &);
+        bool checkDate(for_date_check &_struct);
+        double checkVal(std::string &val);
+        double exchange(const std::string &date, float amount) const;
+        void openFirstCSV();
+        void openFile(const std::string &arg);
+        void fillMap();
+        void inputParse();
+        void giveOutput();
+        void printMap() const;
+        double findInMap(const std::string &) const;
+        ~BitcoinExchange();
 };
 
 void openFirstCSV();
