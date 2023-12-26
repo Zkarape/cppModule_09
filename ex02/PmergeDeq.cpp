@@ -1,6 +1,6 @@
 #include "PmergeMe.hpp"
 
-size_t binarySearch(const std::deque<int> &sorteddeque, int number)
+size_t binarySearchdeque(const std::deque<int> &sorteddeque, int number)
 {
 	size_t low = 0;
 	size_t high = sorteddeque.size();
@@ -32,24 +32,14 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 		++power;
 		n = pow(2, power) - n;
 
-		for (rangeStart = rangeEnd + n - 1; rangeStart >= rangeEn; rangeStart--)
+		rangeStart = rangeEnd + n - 1;
+		if (rangeStart > smSize)
+			rangeStart = smSize;
+		for (int j = rangeStart; j >= rangeEnd; j--)
 		{
-			if (rangeStart >= 0 && rangeStart < smSize)
-			{
-				indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
-				if (indexFoundByBinary >= 0 && static_cast<size_t>(indexFoundByBinary) <= largers.size())
-				{
-					largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
-					i++;
-				}
-				else
-					std::cerr << "Error: Invalid index found by binarySearch in PmergeMe::insert." << std::endl;
-			}
-			else
-			{
-				std::cout << "rangeStart == " << rangeStart << "smSize == " << smSize << std::endl;
-				std::cerr << "Error: Invalid rangeStart in PmergeMe::insert." << std::endl;
-			}
+			indexFoundByBinary = binarySearchdeque(largers, smallers[j]);
+			largers.insert(largers.begin() + indexFoundByBinary, smallers[j]);
+			i++;
 		}
 		rangeEnd += n;
 	}

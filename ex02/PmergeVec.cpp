@@ -32,23 +32,14 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 		++power;
 		n = pow(2, power) - n;
 
-		for (rangeStart = rangeEnd + n - 1; rangeStart >= rangeEnd; rangeStart--)
+		rangeStart = rangeEnd + n - 1;
+		if (rangeStart > smSize)
+			rangeStart = smSize;
+		for (int j = rangeStart; j >= rangeEnd; j--)
 		{
-			if (rangeStart >= 0 && rangeStart < smSize)
-			{
-				indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
-				if (indexFoundByBinary >= 0 && static_cast<size_t>(indexFoundByBinary) <= largers.size())
-				{
-					largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
-					i++;
-				}
-				else
-					std::cerr << "Error: Invalid index found by binarySearch in PmergeMe::insert." << std::endl;
-			}
-			else
-			{
-				std::cerr << "Error: Invalid rangeStart in PmergeMe::insert." << std::endl;
-			}
+			indexFoundByBinary = binarySearch(largers, smallers[j]);
+			largers.insert(largers.begin() + indexFoundByBinary, smallers[j]);
+			i++;
 		}
 		rangeEnd += n;
 	}
