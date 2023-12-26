@@ -24,7 +24,7 @@ private:
 public:
     PmergeMe();
     ~PmergeMe();
-    void insert(std::vector<int> &x, std::vector<int> y);
+    void insert(std::vector<int> &x, std::vector<int> &y);
     void insert(std::deque<int> &x, std::deque<int> y);
     double gettime(t_timeval start);
     void argv_check_cont_fill(char **argv);
@@ -38,6 +38,7 @@ public:
     void sortVector();
     void sortDeque();
     void insertion_vector(std::vector<int> &nums);
+    void insertion_vector_desc(std::vector<int> &nums);
     void insertion_deque(std::deque<int> &nums);
 };
 

@@ -1,57 +1,91 @@
 #include "PmergeMe.hpp"
 
-void PmergeMe::insert(std::deque<int>& x, std::deque<int> y)
+size_t binarySearch(const std::deque<int> &sorteddeque, int number)
 {
-	int n = 0;
-	int power = 0;
-	size_t start_index = 0;
-	size_t end_index = 0;
+	size_t low = 0;
+	size_t high = sorteddeque.size();
 
-	for (size_t i = 0; i < y.size();)
+	while (low < high)
+	{
+		size_t mid = low + (high - low) / 2;
+
+		if (sorteddeque[mid] <= number)
+			low = mid + 1;
+		else
+			high = mid;
+	}
+	return low;
+}
+
+void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
+{
+	int power = 0;
+	int n = 0;
+	int i = 0;
+	int smSize = smallers.size();
+	int rangeStart = 0;
+	int rangeEnd = 0;
+	int indexFoundByBinary = 0;
+
+	while (i < smSize)
 	{
 		++power;
 		n = pow(2, power) - n;
-		start_index += n;
-		end_index = start_index - n;
-		if (start_index > y.size())
-			start_index = y.size();
-		for (size_t j = start_index - 1; j >= end_index;)
+
+		for (rangeStart = rangeEnd + n - 1; rangeStart >= rangeEnd; rangeStart--)
 		{
-			x.insert(std::upper_bound(x.begin(), x.end(), y[j]), y[j]);
-			++i;
-			if (j == 0)
-				break ;
-			--j;
+			if (rangeStart >= 0 && rangeStart < smSize)
+			{
+				indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
+				if (indexFoundByBinary >= 0 && static_cast<size_t>(indexFoundByBinary) <= largers.size())
+				{
+					largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
+					i++;
+				}
+				else
+					std::cerr << "Error: Invalid index found by binarySearch in PmergeMe::insert." << std::endl;
+			}
+			else
+			{
+				std::cerr << "Error: Invalid rangeStart in PmergeMe::insert." << std::endl;
+			}
 		}
+		rangeEnd += n;
 	}
 }
 
-void PmergeMe::merge_deque_sort()
+void PmergeMe::merge_vec_sort(std::deque<int> &vec)
 {
-	int				unpaired;
-	std::deque<int>	x;
-	std::deque<int>	y;
-	size_t size = _deq.size() / 2 + (_deq.size() % 2);
-	unpaired = ((_deq.size() % 2 == 0) ? -1 : _deq[_deq.size() - 1]);
-	if (_deq.size() == 2 || _deq.size() == 3)
+	int i = 0;
+	int j = 0;
+	int size = vec.size();
+	std::deque<int> largers;
+	std::deque<int> smallers;
+
+	if (size == 2 || size == 3)
 	{
-		insertion_deque(_deq);
-		return ;
+		insertion_deque(vec);
+		return;
 	}
-	for (size_t i = 0; i < size; ++i)
+	while (i + 1 < size)
 	{
-		if (i != size - 1 || _deq.size() % 2 == 0)
+		if (vec[i] > vec[i + 1])
 		{
-			int n = _deq[i * 2], m = _deq[i * 2 + 1];
-			if (n > m)
-				std::swap(n, m);
-			x.push_back(m);
-			y.push_back(n);
+			largers.push_back(vec[i]);
+			smallers.push_back(vec[i + 1]);
 		}
+		else
+		{
+			largers.push_back(vec[i + 1]);
+			smallers.push_back(vec[i]);
+		}
+		i += 2;
 	}
-	if (unpaired != -1)
-		y.push_back(unpaired);
-	merge_deque_sort();
-	insert(x, y);
-	_deq = x;
+	if (i < size)
+	{
+		largers.push_back(vec[i]);
+	}
+	merge_vec_sort(largers);
+	insert(largers, smallers);
+	vec = largers;
 }
