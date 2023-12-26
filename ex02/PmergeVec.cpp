@@ -35,10 +35,12 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 		rangeStart = rangeEnd + n - 1;
 		if (rangeStart >= smSize)
 			rangeStart = smSize - 1;
-		for (int j = rangeStart; j >= rangeEnd; j--)
+		while (rangeStart >= rangeEnd)
 		{
-			largers.insert(largers.begin() + indexFoundByBinary, smallers[j]);
+			indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
+			largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
 			i++;
+			rangeStart--;
 		}
 		rangeEnd += n;
 	}

@@ -35,11 +35,12 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 		rangeStart = rangeEnd + n - 1;
 		if (rangeStart >= smSize)
 			rangeStart = smSize - 1;
-		for (int j = rangeStart; j >= rangeEnd; j--)
+		while (rangeStart >= rangeEnd)
 		{
-			indexFoundByBinary = binarySearchdeque(largers, smallers[j]);
-			largers.insert(largers.begin() + indexFoundByBinary, smallers[j]);
+			indexFoundByBinary = binarySearchdeque(largers, smallers[rangeStart]);
+			largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
 			i++;
+			rangeStart--;
 		}
 		rangeEnd += n;
 	}
