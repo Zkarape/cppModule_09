@@ -5,7 +5,6 @@ void PmergeMe::fillVector(int n)
     for (std::vector<int>::iterator it = _vec.begin(); it != _vec.end(); ++it)
     {
         *it = n;
-        std::cout << "number == " << *it << std::endl;
     }
 }
 

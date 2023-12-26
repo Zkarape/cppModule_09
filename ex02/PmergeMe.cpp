@@ -26,15 +26,13 @@ void PmergeMe::sortVector()
 	std::cout << "Time taken by std::vector: " << std::fixed << end - start << " ms\n";
 }
 
-// void PmergeMe::sortDeque()
-// {
-// 	t_timeval now;
-// 	double start, end;
-// 	gettimeofday(&now, NULL);
-// 	start = gettime(now);
-// 	merge_deque_sort();
-// 	end = gettime(now);
-// 	std::cout << "Time taken by std::deque: " << std::fixed << end - start << " ms\n\n";
-// 	std::cout << "std::deque after sorting: ";
-//     printDeque();
-// }
+void PmergeMe::sortDeque()
+{
+	t_timeval now;
+	double start, end;
+	gettimeofday(&now, NULL);
+	start = gettime(now);
+	merge_deq_sort(_deq);
+	end = gettime(now);
+	std::cout << "Time taken by std::deque: " << std::fixed << end - start << " ms\n\n";
+}
