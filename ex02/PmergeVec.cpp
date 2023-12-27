@@ -26,17 +26,7 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 	int rangeStart = 0;
 	int rangeEnd = 0;
 	int indexFoundByBinary = 0;
-
-	// for (std::vector<int>::const_iterator it = smallers.begin(); it != smallers.end(); ++it)
-	// {
-	// 	std::cout << *it << " ";
-	// }
-	// std::cout << std::endl;
-	// if (static_cast<size_t>(smSize) == _vec.size() / 2)
-	// {
-	// 	largers.insert(largers.begin(), smallers[0]);
-	// 	return ;
-	// }
+	
 	while (i < smSize)
 	{
 		if (n < log2(smallers.size()))
@@ -47,11 +37,16 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 		rangeEnd = rangeStart;
 		rangeStart +=  n;
 		if (rangeStart >= smSize)
+		{
 			rangeStart = smSize;
+		}
 		int tmp = rangeStart - 1;
+		if (smSize == 1) {
+			tmp += 1;
+		}
 		while (tmp >= rangeEnd)
 		{
-			indexFoundByBinary = binarySearch(largers, smallers[tmp]); // TODO pass end index to insert
+			indexFoundByBinary = binarySearch(largers, smallers[tmp]);
 			largers.insert(largers.begin() + indexFoundByBinary, smallers[tmp]);
 			i++;
 			tmp--;
