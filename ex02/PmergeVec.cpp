@@ -24,22 +24,31 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 	int i = 0;
 	int smSize = smallers.size();
 	int rangeStart = 0;
-	int rangeEnd = 0;
+	int rangeEnd = -2;
 	int indexFoundByBinary = 0;
 
-	if (smSize == _vec.size() / 2)
-	{
-		largers.insert(largers.begin(), smallers[0]);
-		return ;
-	}
+	// for (std::vector<int>::const_iterator it = smallers.begin(); it != smallers.end(); ++it)
+	// {
+	// 	std::cout << *it << " ";
+	// }
+	// std::cout << std::endl;
+	// if (static_cast<size_t>(smSize) == _vec.size() / 2)
+	// {
+	// 	largers.insert(largers.begin(), smallers[0]);
+	// 	return ;
+	// }
 	while (i < smSize)
 	{
 		++power;
 		n = pow(2, power) - n;
-
+		rangeEnd += n;
 		rangeStart = rangeEnd + n - 1;
-		if (rangeStart >= smSize)
+		if (rangeEnd > smSize)
+			rangeEnd -= n;
+		if (rangeStart > smSize)
 			rangeStart = smSize - 1;
+		if (rangeStart == 0)
+			std::cout << "added" << std::endl;
 		while (rangeStart >= rangeEnd)
 		{
 			indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
@@ -47,14 +56,12 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 			i++;
 			rangeStart--;
 		}
-		rangeEnd += n;
 	}
 }
 
 void PmergeMe::merge_vec_sort(std::vector<int> &vec)
 {
 	int i = 0;
-	int j = 0;
 	int size = vec.size();
 	std::vector<int> largers;
 	std::vector<int> smallers;
@@ -77,9 +84,10 @@ void PmergeMe::merge_vec_sort(std::vector<int> &vec)
 	}
 	if (i < size)
 	{
-		largers.push_back(vec[i]);
+		smallers.push_back(vec[i]);
 	}
 	merge_vec_sort(largers);
 	insert(largers, smallers);
-	vec = largers;
+	if (vec.size() == largers.size())
+		vec = largers;
 }

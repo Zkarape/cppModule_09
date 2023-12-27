@@ -27,11 +27,11 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 	int rangeEnd = 0;
 	int indexFoundByBinary = 0;
 
-	if (smSize == _deq.size() / 2)
-	{
-		largers.insert(largers.begin(), smallers[0]);
-		return ;
-	}
+	// if (static_cast<size_t>(smSize) == _deq.size() / 2)
+	// {
+	// 	largers.insert(largers.begin(), smallers[0]);
+	// 	return ;
+	// }
 	while (i < smSize)
 	{
 		++power;
@@ -54,7 +54,6 @@ void PmergeMe::insert(std::deque<int> &largers, std::deque<int> &smallers)
 void PmergeMe::merge_deq_sort(std::deque<int> &deq)
 {
 	int i = 0;
-	int j = 0;
 	int size = deq.size();
 	std::deque<int> largers;
 	std::deque<int> smallers;
