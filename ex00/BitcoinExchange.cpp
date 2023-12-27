@@ -31,6 +31,26 @@ void BitcoinExchange::openFile(const std::string &arg)
         throw(std::runtime_error("Bad file argument"));
 }
 
+BitcoinExchange::BitcoinExchange() : _data(""), _argData("") {}
+
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &other)
+{
+    _map = other._map;
+    _data = other._data;
+    _argData = other._argData;
+}
+
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
+{
+    if (this != &other)
+    {
+        _map = other._map;
+        _data = other._data;
+        _argData = other._argData;
+    }
+    return *this;
+}
+
 BitcoinExchange::BitcoinExchange(const std::string &arg)
 {
     openFile(arg);
@@ -98,11 +118,10 @@ bool checkDay(const for_date_check &date)
     int dayInt = strtol(date.day.c_str(), NULL, 10);
     if (dayInt <= 0)
         return (0);
-    // std::cout << dayInt << "\n";
     int monthInt = strtol(date.month.c_str(), &ptr, 10);
     if (monthInt <= 7 && ((monthInt % 2 == 0 && dayInt > 30) || (monthInt % 2 && dayInt > 31)))
         return (0);
-    if (monthInt == 2 && (!is_leap_year(strtol(date.year.c_str(), &ptr, 10)) && dayInt > 28))
+    if (monthInt == 2 && ((is_leap_year(strtol(date.year.c_str(), &ptr, 10)) == 0 && dayInt > 28) || dayInt > 29))
         return (0);
     if (monthInt > 7 && ((monthInt % 2 == 0 && dayInt > 31) || (monthInt % 2 && dayInt > 30)))
         return (0);
@@ -243,18 +262,12 @@ double BitcoinExchange::exchange(const std::string &date, float amount) const
 
     if (_map.size() < 1)
         throw std::logic_error("there is no data");
-    it = _map.find(date);
+    it = _map.lower_bound(date);
     if (it != _map.end())
     {
         return (it->second * amount);
     }
-    std::pair<std::map<std::string, double>::const_iterator, std::map<std::string, double>::const_iterator> pair(_map.begin(), _map.end());
-    while (pair.first != pair.second && pair.first->first < date)
-    {
-        ++pair.first;
-    }
-    --pair.first;
-    return (pair.first->second * amount);
+    throw std::logic_error("Not found");
 }
 
 bool func(std::string &key, std::string &value)
