@@ -20,11 +20,11 @@ size_t binarySearch(const std::vector<int> &sortedVector, int number)
 void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 {
 	int power = 0;
-	int n = 0;
+	size_t n = 0;
 	int i = 0;
 	int smSize = smallers.size();
 	int rangeStart = 0;
-	int rangeEnd = -2;
+	int rangeEnd = 0;
 	int indexFoundByBinary = 0;
 
 	// for (std::vector<int>::const_iterator it = smallers.begin(); it != smallers.end(); ++it)
@@ -39,22 +39,22 @@ void PmergeMe::insert(std::vector<int> &largers, std::vector<int> &smallers)
 	// }
 	while (i < smSize)
 	{
-		++power;
-		n = pow(2, power) - n;
-		rangeEnd += n;
-		rangeStart = rangeEnd + n - 1;
-		if (rangeEnd > smSize)
-			rangeEnd -= n;
-		if (rangeStart > smSize)
-			rangeStart = smSize - 1;
-		if (rangeStart == 0)
-			std::cout << "added" << std::endl;
-		while (rangeStart >= rangeEnd)
+		if (n < log2(smallers.size()))
 		{
-			indexFoundByBinary = binarySearch(largers, smallers[rangeStart]);
-			largers.insert(largers.begin() + indexFoundByBinary, smallers[rangeStart]);
+			++power;
+			n = pow(2, power) - n;
+		}
+		rangeEnd = rangeStart;
+		rangeStart +=  n;
+		if (rangeStart >= smSize)
+			rangeStart = smSize;
+		int tmp = rangeStart - 1;
+		while (tmp >= rangeEnd)
+		{
+			indexFoundByBinary = binarySearch(largers, smallers[tmp]); // TODO pass end index to insert
+			largers.insert(largers.begin() + indexFoundByBinary, smallers[tmp]);
 			i++;
-			rangeStart--;
+			tmp--;
 		}
 	}
 }
